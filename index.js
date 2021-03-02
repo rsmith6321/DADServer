@@ -19,8 +19,9 @@ function main() {
       if (err) throw err;
       slidetextsetting = result[0];
 
-      ///checktheme
+      //checkpatch
       var gotpatch = false;
+      ///checktheme
       var themes = ["red", "yellow", "white"];
 
       var responsepackage = {
@@ -43,29 +44,30 @@ function main() {
 ///run///
 main();
 
+////FUNCTIONS////
 function timeforpackage(format) {
   let dateOb = new Date();
   let year = dateOb.getFullYear();
   let month = ("0" + (dateOb.getMonth() + 1)).slice(-2);
   let date = ("0" + dateOb.getDate()).slice(-2);
-
+  var out;
   switch (format) {
     case "time":
       let hours = ("0" + dateOb.getHours()).slice(-2);
       let minutes = ("0" + dateOb.getMinutes()).slice(-2);
       let seconds = ("0" + dateOb.getSeconds()).slice(-2);
-      var out = hours + ":" + minutes + ":" + seconds;
+      out = hours + ":" + minutes + ":" + seconds;
       break;
     case "y-m-d":
-      var out = year + ":" + month + ":" + date;
+      out = year + ":" + month + ":" + date;
       break;
     case "d-m-y":
-      var out = date + ":" + month + ":" + year;
+      out = date + ":" + month + ":" + year;
       break;
     case "m-d-y":
-      var out = month + ":" + date + ":" + year;
+      out = month + ":" + date + ":" + year;
     default:
-      var out = year + ":" + month + ":" + date;
+      out = year + ":" + month + ":" + date;
   }
 
   return out;
