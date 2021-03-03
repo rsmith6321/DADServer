@@ -1,6 +1,15 @@
 const express = require("express");
 const app = express();
 var mysql = require("mysql");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// const readline = require("readline").createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+const prompt = require("prompt-sync")({ sigint: true });
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -8,41 +17,64 @@ var con = mysql.createConnection({
   password: "",
   database: "WebConfig",
 });
-function main() {
-  con.connect(function (err) {
-    var slidetextsetting;
+con.connect(function (err) {
+  if (err) throw err;
+  console.log("DBconnected");
+});
+function main(callback) {
+  var slidetextsetting;
+  ///getslidetextsetting
+  var sql = "SELECT * FROM form_config";
+  con.query(sql, function (err, result) {
     if (err) throw err;
-    console.log("DBconnected");
-    ///getslidetextsetting
-    var sql = "SELECT * FROM form_config";
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      slidetextsetting = result[0];
+    slidetextsetting = result[0];
 
-      //checkpatch
-      var gotpatch = false;
-      ///checktheme
-      var themes = ["red", "yellow", "white"];
+    //checkpatch
+    var gotpatch = false;
+    ///checktheme
+    var themes = ["red", "yellow", "white"];
 
-      var responsepackage = {
-        newpatch: gotpatch,
-        theme: themes[1],
-        slidetext: slidetextsetting,
-        time: timeforpackage("time"),
-      };
+    var responsepackage = {
+      newpatch: gotpatch,
+      theme: themes[1],
+      slidetext: slidetextsetting,
+      time: timeforpackage("time"),
+    };
 
-      app.get("/", (req, res) => {
-        res.send(JSON.stringify(responsepackage));
-      });
-
-      app.listen(3000, () => {
-        console.log("start server at 3000");
-      });
-    });
+    // app.get("/", (req, res) => {
+    //   res.send(JSON.stringify(responsepackage));
+    // });
+    return callback(JSON.stringify(responsepackage));
   });
 }
+
 ///run///
-main();
+app.listen(3000, () => {
+  console.log("start server at 3000");
+  // const name = prompt("WHO ARE YOU:");
+
+  // switch (name) {
+  //   case "kiosk":
+  //     var package = prompt("Your JSON Package: ");
+  //     datapackage = JSON.parse(package);
+
+  //     break;
+
+  // default:
+  //   console.log("notting for you");
+  // }
+});
+
+app.post("/", (req, res) => {
+  var machine_name = req.body.machine_name;
+  console.log(machine_name);
+
+  main(function (jsonresponse) {
+    res.send(jsonresponse);
+  });
+});
+
+// main();
 
 ////FUNCTIONS////
 function timeforpackage(format) {
