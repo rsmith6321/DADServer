@@ -21,7 +21,7 @@ con.connect(function (err) {
   if (err) throw err;
   console.log("DBconnected");
 });
-function main(callback) {
+function response(callback) {
   var slidetextsetting;
   ///getslidetextsetting
   var sql = "SELECT * FROM form_config";
@@ -69,7 +69,7 @@ app.post("/", (req, res) => {
   var machine_name = req.body.machine_name;
   console.log(machine_name);
 
-  main(function (jsonresponse) {
+  response(function (jsonresponse) {
     res.send(jsonresponse);
   });
 });
