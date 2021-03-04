@@ -21,7 +21,7 @@ con.connect(function (err) {
   if (err) throw err;
   console.log("DBconnected");
 });
-function response(callback) {
+function response(who, theme, callback) {
   var slidetextsetting;
   ///getslidetextsetting
   var sql = "SELECT * FROM form_config";
@@ -32,19 +32,21 @@ function response(callback) {
     //checkpatch
     var gotpatch = false;
     ///checktheme
-    var themes = ["red", "yellow", "white"];
+    // var themes = ["red", "yellow", "white"];
 
-    var responsepackage = {
+    let package = {
       newpatch: gotpatch,
-      theme: themes[1],
+      theme: theme,
       slidetext: slidetextsetting,
       time: timeforpackage("time"),
     };
 
-    // app.get("/", (req, res) => {
-    //   res.send(JSON.stringify(responsepackage));
-    // });
-    return callback(JSON.stringify(responsepackage));
+    let response = {
+      name: who,
+      package: package,
+    };
+
+    return callback(JSON.stringify(response));
   });
 }
 
@@ -66,10 +68,15 @@ app.listen(3000, () => {
 });
 
 app.post("/", (req, res) => {
-  var machine_name = req.body.machine_name;
-  console.log(machine_name);
+  let machine_name = req.body.machine_name;
+  // console.log(machine_name);
 
-  response(function (jsonresponse) {
+  //dump theme random for response//
+  let themes = req.body.themes;
+  let theme = themes[Math.floor(Math.random() * themes.length)];
+  console.log(theme);
+
+  response(machine_name, theme, function (jsonresponse) {
     res.send(jsonresponse);
   });
 });
